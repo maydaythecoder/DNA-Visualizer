@@ -1,4 +1,6 @@
-import random, sys, time
+import sys
+import time
+from itertools import cycle
 
 PAUSE = 0.3
 
@@ -14,32 +16,24 @@ ROWS = [
     '       #{}-{}#',
 ]
 
+nucleotide_pairs = [('A', 'T'), ('T', 'A'), ('C', 'G'), ('G', 'C')]
+nucleotide_pairs_cycle = cycle(nucleotide_pairs)
+
 try:
     print('DNA Visualizer')
     print('Press Ctrl-C to quit...')
     time.sleep(1)
+
     rowIndex = 0
-
     while True:
-        rowIndex = rowIndex + 1
-        if rowIndex == len(ROWS):
-            rowIndex = 0
+        rowIndex = (rowIndex + 1) % len(ROWS)
 
-        if rowIndex == 0 or rowIndex == 9:
+        if rowIndex == 0 or rowIndex == len(ROWS) - 1:
             print(ROWS[rowIndex])
             continue
 
-        randomSelection = random.randint(1, 4)
-        if randomSelection == 1:
-            leftNucleotide, rightNucleotide = 'A', 'T'
-        elif randomSelection == 2:
-            leftNucleotide, rightNucleotide = 'T', 'A'
-        elif randomSelection == 3:
-            leftNucleotide, rightNucleotide = 'C', 'G'
-        elif randomSelection == 4:
-            leftNucleotide, rightNucleotide = 'G', 'C'
-
-        print(ROWS[rowIndex].format(leftNucleotide, rightNucleotide))
+        row = ROWS[rowIndex].format(next(nucleotide_pairs_cycle)[0], next(nucleotide_pairs_cycle)[1])
+        print(row)
         time.sleep(PAUSE)
 
 except KeyboardInterrupt:
